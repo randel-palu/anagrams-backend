@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\WordListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/v1/login', [AuthController::class, 'login']);
+
+Route::group(['prefix' => 'v1','namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => 'auth:sanctum'], function() {
+    Route::post('anagram',['uses' => 'AnagramController@anagrams']);
+    Route::get('wordlist', [WordListController::class, 'index']);
+    Route::post('wordlist', ['uses' => 'WordListController@requestImport']);
 });
+
