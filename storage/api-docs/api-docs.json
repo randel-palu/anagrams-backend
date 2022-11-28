@@ -1,0 +1,223 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Anagrams API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/V1/anagram": {
+            "post": {
+                "summary": "Find the anagrams of the given word.",
+                "operationId": "f07f1cb5acd8476771e8e68b4981cf3d",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "word": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "word": "kabe"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "",
+                                        "value": {
+                                            "success": "true",
+                                            "data": [
+                                                {
+                                                    "id": 11355,
+                                                    "word": "ebak",
+                                                    "hash": "abek"
+                                                },
+                                                {
+                                                    "id": 33269,
+                                                    "word": "kabe",
+                                                    "hash": "abek"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/V1/login": {
+            "post": {
+                "summary": "User authentication.",
+                "operationId": "6558a87af77903e6dfba63130d13e208",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "email": "mhmm1@mail.com",
+                                    "password": "123asdf"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "",
+                                        "value": {
+                                            "success": true,
+                                            "message": "user logged in successfully",
+                                            "token": "1|qbf2oqTg3KB5AfwiArZnOFhgwMq20OmFSgPjNpOa5"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/V1/wordlist": {
+            "get": {
+                "summary": "Get the paginated wordlist.",
+                "operationId": "2ccf8a0b9d741478ff8b25767ed958d2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "page": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "page": 3
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "",
+                                        "value": {
+                                            "current_page": 3,
+                                            "data": [
+                                                {
+                                                    "id": 61,
+                                                    "word": "aadlipreili",
+                                                    "hash": "aadeiiillpr"
+                                                },
+                                                {
+                                                    "id": 62,
+                                                    "word": "aadlipäritolu",
+                                                    "hash": "aadiilloprtuä"
+                                                }
+                                            ],
+                                            "first_page_url": "http://localhost/api/v1/wordlist?page=1",
+                                            "from": 61,
+                                            "last_page": 5935,
+                                            "last_page_url": "http://localhost/api/v1/wordlist?page=5935",
+                                            "links": [
+                                                {
+                                                    "url": "http://localhost/api/v1/wordlist?page=2",
+                                                    "label": "&laquo; Previous",
+                                                    "active": "false"
+                                                },
+                                                {
+                                                    "id": "http://localhost/api/v1/wordlist?page=1",
+                                                    "label": "1",
+                                                    "active": "false"
+                                                }
+                                            ],
+                                            "next_page_url": "http://localhost/api/v1/wordlist?page=4",
+                                            "path": "http://localhost/api/v1/wordlist",
+                                            "per_page": 30,
+                                            "prev_page_url": "http://localhost/api/v1/wordlist?page=2",
+                                            "to": 90,
+                                            "total": 178028
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post the wordlist URL for data import.",
+                "operationId": "9f9508ac4a7e1d36b980354163ca1c99",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "url": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "url": "http://www.eki.ee/tarkvara/wordlist/lemmad2013.txt"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "",
+                                        "value": {
+                                            "message": "wordlist imported successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
