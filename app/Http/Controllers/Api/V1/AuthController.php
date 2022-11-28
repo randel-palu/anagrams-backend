@@ -7,15 +7,56 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Attributes\OpenApi as OA;
 
 class AuthController extends Controller
 {
     /**
-     * Login The User
+     * @OA\Post(
+     *     path="/api/V1/login",
+     *     summary="User authentication.",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="email"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string"
+     *                 ),
+     *                 example={"email": "mhmm1@mail.com", "password": "123asdf"}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="email"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string"
+     *                 ),
+     *                 example={"email": "mhmm2@mail.com", "password": "123asdf"}
+     *             ),
+     *             @OA\Examples(example="result",
+     *                          value={"success": true, "message":"user logged in successfully",
+     *                              "token": "1|qbf2oqTg3KB5AfwiArZnOFhgwMq20OmFSgPjNpOa5"},
+     *                          summary="")
+     *         )
+     *     )
+     * )
+     *
      * @param Request $request
-     * @return JsonResponse
+     * @returns JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -27,22 +68,16 @@ class AuthController extends Controller
                 ]);
 
             if($validateUser->fails()){
-                Log::debug('validation 1111111111');
                 return response()->json([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'validation error',
                     'errors' => $validateUser->errors()
-                ], 401);
+                ], 403);
             }
-
-            Log::debug('validation 22222222222');
-            Log::debug($request);
-
-
 
             if(!Auth::attempt($request->only(['email', 'password']))){
                 return response()->json([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'wrong email or password.',
                 ], 401);
             }
@@ -50,14 +85,14 @@ class AuthController extends Controller
             $user = User::where('email', $request->email)->first();
 
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'user logged in successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
 
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
