@@ -18,14 +18,18 @@ class WordListHelper
      * @param  string $url
      * @return bool
      */
-    public function importList(String $url = self::DEFAULT_FILE_URL)
+    public function importList(String $url = self::DEFAULT_FILE_URL): bool
     {
         try {
             Log::debug('Importing wordlist...');
 
-            //TODO: add url and file format check
-            $commaSeparated = trim(str_replace(["\r\n", "\n", "\r"], ',', file_get_contents($url)), ',');
-            $wordArray = explode(',', $commaSeparated);
+            $fileContents = file_get_contents($url);
+
+            if(gettype($fileContents) !== "string"){
+                return false;
+            }
+
+            $wordArray = $this->createWordArray($fileContents);
 
             if(empty($wordArray)) {
                 return false;
@@ -34,12 +38,23 @@ class WordListHelper
             $this->insertListIntoDB($wordArray);
 
             Log::debug('Import was successful!');
+            return true;
         } catch (\Throwable $th) {
             Log::error($th);
             return false;
         }
+    }
 
-        return true;
+    /**
+     * Return a word array from a string(where the words are separated by EOL).
+     *
+     * @param  string $content
+     * @return array
+     */
+    private function createWordArray(string $content): array
+    {
+        $commaSeparated = trim(str_replace(["\r\n", "\n", "\r"], ',', $content), ',');
+        return explode(',', $commaSeparated);
     }
 
     /**
@@ -47,7 +62,7 @@ class WordListHelper
      *
      * @param  array $words
      */
-    public function insertListIntoDB(Array $words): void
+    private function insertListIntoDB(Array $words): void
     {
         try {
             Word::truncate();
@@ -76,7 +91,7 @@ class WordListHelper
      * @param  string $word
      * @return string
      */
-    public function createHash(String $word)
+    public function createHash(String $word): string
     {
         if($word === ''){
             return '';
