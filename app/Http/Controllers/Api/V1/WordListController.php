@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\WordListRequest;
 use App\Models\Word;
+use App\Services\WordListService;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\WordListHelper;
+use Illuminate\Support\Facades\Log;
 
 class WordListController extends Controller
 {
@@ -121,18 +123,14 @@ class WordListController extends Controller
      *     )
      * )
      *
-     * Fetch wordlist from external URL and store aquired words into DB.
+     * Fetch wordlist from external URL and store the words in DB.
      *
      * @param WordListRequest $request
      * @return JsonResponse
      */
-    public function requestImport(WordListRequest $request): JsonResponse
+    public function import(WordListRequest $request, WordListService $wordListService): JsonResponse
     {
-        // TODO: checks to see if valid URL, and file can be accessed
-        // TODO: file and text format checks
-        $wordlistUrl = $request->get('url');
-
-        if ((new WordListHelper())->importList($wordlistUrl)) {
+        if($wordListService->import($request->get('url'))) {
             return response()->json([
                 'message' => 'wordlist imported successfully'
             ], 200);

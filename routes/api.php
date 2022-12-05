@@ -20,6 +20,6 @@ Route::post('/v1/login', [AuthController::class, 'login']);
 Route::group(['prefix' => 'v1','namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => 'auth:sanctum'], function() {
     Route::post('anagram',['uses' => 'AnagramController@anagrams']);
     Route::get('wordlist', [WordListController::class, 'index']);
-    Route::post('wordlist', ['uses' => 'WordListController@requestImport']);
+    Route::post('wordlist', ['uses' => 'WordListController@import']);
 });
 
