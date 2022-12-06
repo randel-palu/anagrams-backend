@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\HashCreator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\AnagramRequest;
 use App\Models\Word;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Helpers\WordListHelper;
 
 class AnagramController extends Controller
 {
@@ -59,11 +59,11 @@ class AnagramController extends Controller
      * @param AnagramRequest $request
      * @return JsonResponse
      */
-    public function anagrams(AnagramRequest $request): JsonResponse
+    public function anagrams(AnagramRequest $request, HashCreator $hashCreator): JsonResponse
     {
         $requestedWord = $request->get('word');
 
-        $searchableHash = (new WordListHelper())->createHash($requestedWord);
+        $searchableHash = $hashCreator->create($requestedWord);
         $anagrams = Word::query()->whereRaw("BINARY `hash`='$searchableHash'")->get();
 
         return response()->json([
