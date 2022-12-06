@@ -78,8 +78,9 @@ class WordListService
 
         try {
             // TODO: get transaction working
-//            DB::beginTransaction();
-            DB::table('wordlist')->truncate();
+            DB::beginTransaction();
+//            DB::table('wordlist')->truncate();
+            DB::table('wordlist')->delete();
 
             foreach (array_chunk($words, self::CHUNK_SIZE) as $chunk) {
                 $arr = [];
@@ -94,9 +95,9 @@ class WordListService
                 DB::table('wordlist')->insertOrIgnore($arr);
                 Log::debug('Insert wordlist into DB succeeded !');
             }
-//            DB::commit();
+            DB::commit();
         }catch (\Throwable $th){
-//            DB::rollBack();
+            DB::rollBack();
             Log::error($th);
             Log::debug('Insert wordlist into DB failed !');
         }
